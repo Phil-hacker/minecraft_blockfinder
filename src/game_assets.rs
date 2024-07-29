@@ -90,7 +90,10 @@ impl MinecraftAssets {
                 .into_iter()
                 .map(|(v, mut path)| {
                     info!("{path}");
-                    if std::env::var("TEST_ASSETS").map(|v| v.is_empty()).unwrap_or_default() {
+                    if std::env::var("TEST_ASSETS")
+                        .map(|v| v.is_empty())
+                        .unwrap_or_default()
+                    {
                         path = format!("test_assets/assets/{path}");
                     }
                     let handle = asset_server.load(path);

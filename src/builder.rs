@@ -29,7 +29,8 @@ impl Plugin for BuilderPlugin {
         )
         .add_systems(
             Update,
-            (handle_raycasts, on_resize, handle_keyboard_inputs).run_if(in_state(AppState::Building)),
+            (handle_raycasts, on_resize, handle_keyboard_inputs)
+                .run_if(in_state(AppState::Building)),
         )
         .add_systems(OnExit(AppState::Building), remove_builder_gui);
     }
@@ -59,12 +60,13 @@ fn handle_keyboard_inputs(
         let mesh = meshes.get_mut(grid_mesh.single().id()).unwrap();
         let block_meta = voxel_registry.get_meta("grass_block");
         grid.as_mut().reset(mesh, voxel_registry.as_ref());
-        let index = one_d_cords([GRID_SIZE.0 / 2, GRID_SIZE.1 / 2, GRID_SIZE.2 / 2,], GRID_SIZE);
-        grid.as_mut().add_block(index,
-            BlockId(
-                block_meta.id,
-                0
-            ),
+        let index = one_d_cords(
+            [GRID_SIZE.0 / 2, GRID_SIZE.1 / 2, GRID_SIZE.2 / 2],
+            GRID_SIZE,
+        );
+        grid.as_mut().add_block(
+            index,
+            BlockId(block_meta.id, 0),
             mesh,
             voxel_registry.as_ref(),
         );
@@ -126,15 +128,18 @@ fn setup_builder(
 
 fn setup_builder_gui(voxel_registry: Res<MinecraftBlockProvider>, mut commands: Commands) {
     commands
-        .spawn((NodeBundle {
-            style: Style {
-                width: Val::Percent(20.0),
-                height: Val::Percent(100.0),
-                justify_content: JustifyContent::SpaceBetween,
+        .spawn((
+            NodeBundle {
+                style: Style {
+                    width: Val::Percent(20.0),
+                    height: Val::Percent(100.0),
+                    justify_content: JustifyContent::SpaceBetween,
+                    ..default()
+                },
                 ..default()
             },
-            ..default()
-        }, BuilderGui))
+            BuilderGui,
+        ))
         .with_children(|parent| {
             // left vertical fill (content)
             parent

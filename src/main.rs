@@ -7,10 +7,13 @@ use std::{
 
 #[allow(unused)]
 use bevy::prelude::*;
-use bevy::{asset::io::AssetSourceBuilder, render::{
-    settings::{RenderCreation, WgpuFeatures, WgpuSettings},
-    RenderPlugin,
-}};
+use bevy::{
+    asset::io::AssetSourceBuilder,
+    render::{
+        settings::{RenderCreation, WgpuFeatures, WgpuSettings},
+        RenderPlugin,
+    },
+};
 use bevy_flycam::prelude::*;
 use bevy_mod_raycast::prelude::*;
 use finder::plugin::GPUFinderPlugin;
@@ -71,16 +74,14 @@ fn main() {
 fn copy_minecraft_assets() {
     let version_path = get_minecraft_version_path();
     let mut zip_file =
-        ZipArchive::new(File::open(&version_path).expect("Couldn't load minecraft assets"))
+        ZipArchive::new(File::open(version_path).expect("Couldn't load minecraft assets"))
             .expect("Couldn't load minecraft assets");
     for index in 0..zip_file.len() {
         let mut file = zip_file.by_index(index).unwrap();
         let path = file.enclosed_name().unwrap();
-        if path.starts_with("assets/") {
-            if file.is_file() {
-                create_dir_all(path.parent().unwrap()).unwrap();
-                copy(&mut file, &mut File::create(path).unwrap()).unwrap();
-            }
+        if path.starts_with("assets/") && file.is_file() {
+            create_dir_all(path.parent().unwrap()).unwrap();
+            copy(&mut file, &mut File::create(path).unwrap()).unwrap();
         }
     }
 }
@@ -111,7 +112,7 @@ fn get_minecraft_version_path() -> PathBuf {
                                 .file_name()
                                 .to_string_lossy()
                                 .to_string()
-                                .split_terminator(".")
+                                .split_terminator('.')
                                 .nth(1)
                                 .unwrap_or_default()
                                 .parse::<u32>()

@@ -18,7 +18,8 @@ pub fn get_rendering_seed(x: i64, y: i64, z: i64) -> i64 {
 
 fn get_rotation_from_seed(seed: i64) -> i32 {
     let seed = (seed ^ 0x5DEECE66D) & ((1 << 48) - 1);
-    let value = (((seed.wrapping_mul(0xBB20B4600A69).wrapping_add(0x40942DE6BA) as u64) >> 16) & (0xFFFFFFFF)) as i64;
+    let value = (((seed.wrapping_mul(0xBB20B4600A69).wrapping_add(0x40942DE6BA) as u64) >> 16)
+        & (0xFFFFFFFF)) as i64;
     value as i32
 }
 
@@ -29,11 +30,13 @@ pub fn check_rotation(desired_rotation: Rotation, rotation: u8) -> bool {
 }
 
 pub fn rotate_grid(
-    grid: &[Rotation ;GRID_SIZE.0 * GRID_SIZE.1 * GRID_SIZE.2],
+    grid: &[Rotation; GRID_SIZE.0 * GRID_SIZE.1 * GRID_SIZE.2],
     rotation: u8,
-) -> Box<[Rotation ;GRID_SIZE.0 * GRID_SIZE.1 * GRID_SIZE.2]> {
+) -> Box<[Rotation; GRID_SIZE.0 * GRID_SIZE.1 * GRID_SIZE.2]> {
     let mut new_grid = Box::new(*grid);
-    grid.iter().enumerate().map(|(index, value, )| (three_d_cords(index, GRID_SIZE), value))
+    grid.iter()
+        .enumerate()
+        .map(|(index, value)| (three_d_cords(index, GRID_SIZE), value))
         .for_each(|(pos, value)| {
             new_grid[one_d_cords(rotate_pos(pos, rotation), GRID_SIZE)] = value.rotate(rotation);
         });

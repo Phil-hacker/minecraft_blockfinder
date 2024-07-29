@@ -1,11 +1,12 @@
 use std::io::Read;
 
-use bevy::{asset::io::{AssetReader, AssetSourceBuilder}, tasks::futures_lite::{AsyncRead, AsyncSeek}};
+use bevy::{
+    asset::io::{AssetReader, AssetSourceBuilder},
+    tasks::futures_lite::{AsyncRead, AsyncSeek},
+};
 
 pub fn embedded_shader_source() -> AssetSourceBuilder {
-    AssetSourceBuilder::default().with_reader(|| {
-        Box::new(EmbeddedShaderReader)
-    })
+    AssetSourceBuilder::default().with_reader(|| Box::new(EmbeddedShaderReader))
 }
 
 struct EmbeddedShaderReader;
@@ -14,20 +15,22 @@ impl AssetReader for EmbeddedShaderReader {
     fn read<'a>(
         &'a self,
         path: &'a std::path::Path,
-    ) -> impl bevy::utils::ConditionalSendFuture<Output = Result<Box<bevy::asset::io::Reader<'a>>, bevy::asset::io::AssetReaderError>> {
+    ) -> impl bevy::utils::ConditionalSendFuture<
+        Output = Result<Box<bevy::asset::io::Reader<'a>>, bevy::asset::io::AssetReaderError>,
+    > {
         async {
             match path.to_str() {
                 Some("find.wgsl") => {
-                    let boxed: Box<bevy::asset::io::Reader> = Box::new(DataReader(include_bytes!("../shaders/find.wgsl")));
+                    let boxed: Box<bevy::asset::io::Reader> =
+                        Box::new(DataReader(include_bytes!("../shaders/find.wgsl")));
                     Ok(boxed)
-                },
-                Some("chunk.wgsl") => {
-                    let boxed: Box<bevy::asset::io::Reader> = Box::new(DataReader(include_bytes!("../shaders/chunk.wgsl")));
-                    Ok(boxed)
-                },
-                _ => {
-                    Err(bevy::asset::io::AssetReaderError::NotFound(path.to_owned()))
                 }
+                Some("chunk.wgsl") => {
+                    let boxed: Box<bevy::asset::io::Reader> =
+                        Box::new(DataReader(include_bytes!("../shaders/chunk.wgsl")));
+                    Ok(boxed)
+                }
+                _ => Err(bevy::asset::io::AssetReaderError::NotFound(path.to_owned())),
             }
         }
     }
@@ -35,29 +38,30 @@ impl AssetReader for EmbeddedShaderReader {
     fn read_meta<'a>(
         &'a self,
         path: &'a std::path::Path,
-    ) -> impl bevy::utils::ConditionalSendFuture<Output = Result<Box<bevy::asset::io::Reader<'a>>, bevy::asset::io::AssetReaderError>> {
+    ) -> impl bevy::utils::ConditionalSendFuture<
+        Output = Result<Box<bevy::asset::io::Reader<'a>>, bevy::asset::io::AssetReaderError>,
+    > {
         async { Err(bevy::asset::io::AssetReaderError::NotFound(path.to_owned())) }
     }
 
     fn read_directory<'a>(
         &'a self,
         path: &'a std::path::Path,
-    ) -> impl bevy::utils::ConditionalSendFuture<Output = Result<Box<bevy::asset::io::PathStream>, bevy::asset::io::AssetReaderError>> {
+    ) -> impl bevy::utils::ConditionalSendFuture<
+        Output = Result<Box<bevy::asset::io::PathStream>, bevy::asset::io::AssetReaderError>,
+    > {
         async { Err(bevy::asset::io::AssetReaderError::NotFound(path.to_owned())) }
     }
 
     fn is_directory<'a>(
         &'a self,
         path: &'a std::path::Path,
-    ) -> impl bevy::utils::ConditionalSendFuture<Output = Result<bool, bevy::asset::io::AssetReaderError>> {
+    ) -> impl bevy::utils::ConditionalSendFuture<Output = Result<bool, bevy::asset::io::AssetReaderError>>
+    {
         async {
             match path.to_str() {
-                Some("find.wgsl") | Some("chunk.wgsl") => {
-                    Ok(false)
-                },
-                _ => {
-                    Err(bevy::asset::io::AssetReaderError::NotFound(path.to_owned()))
-                }
+                Some("find.wgsl") | Some("chunk.wgsl") => Ok(false),
+                _ => Err(bevy::asset::io::AssetReaderError::NotFound(path.to_owned())),
             }
         }
     }

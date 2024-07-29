@@ -66,7 +66,10 @@ impl CPUChunkProvider {
                                 }
                             },
                     */
-                    generate_grid(start_x as i64 * CHUNK_SIZE as i64, start_z as i64 * CHUNK_SIZE as i64),
+                    generate_grid(
+                        start_x as i64 * CHUNK_SIZE as i64,
+                        start_z as i64 * CHUNK_SIZE as i64,
+                    ),
                 );
                 let mut lock = buffer_copy.0.lock().unwrap();
                 if lock.is_some() {

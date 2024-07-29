@@ -130,7 +130,10 @@ impl Grid {
         for (i, element) in self.grid.iter().enumerate() {
             array[i] = Rotation::new(
                 element.1,
-                block_provider.get_meta_from_index(element.0).map(|v| v.variants).unwrap_or_default(),
+                block_provider
+                    .get_meta_from_index(element.0)
+                    .map(|v| v.variants)
+                    .unwrap_or_default(),
             );
         }
         array
@@ -144,7 +147,10 @@ impl Grid {
         for (i, element) in self.grid.iter().enumerate() {
             array[i] = Rotation::new(
                 element.1,
-                block_provider.get_meta_from_index(element.0).map(|v| v.variants).unwrap_or_default(),
+                block_provider
+                    .get_meta_from_index(element.0)
+                    .map(|v| v.variants)
+                    .unwrap_or_default(),
             )
             .0;
         }
