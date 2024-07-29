@@ -28,7 +28,3 @@ opt-level = 3
 [profile.release]
 lto = "thin"
 strip = "symbols"
-
-[features]
-
-test_assets = []
