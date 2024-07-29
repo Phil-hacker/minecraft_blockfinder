@@ -18,6 +18,8 @@ use bevy_flycam::prelude::*;
 use bevy_mod_raycast::prelude::*;
 use finder::plugin::GPUFinderPlugin;
 use zip::ZipArchive;
+#[cfg(not(debug_assertions))]
+use crate::shader_assets::embedded_shader_source;
 
 pub mod block_list;
 pub mod builder;
