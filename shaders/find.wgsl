@@ -54,9 +54,9 @@ fn get_grid(index: u32) -> u32 {
 }
 
 fn get_chunk(index: u32) -> u32 {
-    //let real_index = index / 4;
-    //return (chunk[real_index] >> ((index % 4) * 8)) & 255;
-    return chunk[index];
+    let real_index = index / 4;
+    return (chunk[real_index] >> ((index % 4) * 8)) & 255;
+    //return chunk[index];
 }
 
 fn get_rotation(data: u32) -> u32 {

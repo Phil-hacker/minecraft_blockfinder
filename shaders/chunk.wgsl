@@ -8,9 +8,9 @@ var<storage, read_write> chunk: array<u32>;
 @compute @workgroup_size(1)
 fn main(@builtin(global_invocation_id) invocation_id: vec3<u32>, @builtin(num_workgroups) workgroups: vec3<u32>) {
     let index = to_index(workgroups, invocation_id);
-    chunk[index] = get_block_rotation(vec3i64(invocation_id) + vec3(i64(position.x),0,i64(position.y)));
+    chunk[index] = get_block_rotations(vec3i64(invocation_id) * vec3(4,1,1) + vec3(i64(position.x),0,i64(position.y)));
 }
-/*
+
 fn get_block_rotations(pos: vec3<i64>) -> u32 {
     return pack4xU8(vec4(
         get_block_rotation(pos),
@@ -19,7 +19,7 @@ fn get_block_rotations(pos: vec3<i64>) -> u32 {
         get_block_rotation(pos + vec3(3,0,0)),
     ));
 }
-*/
+
 
 fn vec3i64(value: vec3<u32>) -> vec3<i64> {
     return vec3(i64(value.x), i64(value.y), i64(value.z));
