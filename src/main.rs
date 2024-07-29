@@ -40,7 +40,9 @@ enum AppState {
 }
 
 fn main() {
-    copy_minecraft_assets();
+    if !Path::new("assets").exists() {
+        copy_minecraft_assets();
+    }
     let mut render_plugin = RenderPlugin::default();
     let mut wgpu_settings = WgpuSettings::default();
     wgpu_settings.features = wgpu_settings.features.union(WgpuFeatures::SHADER_INT64);
