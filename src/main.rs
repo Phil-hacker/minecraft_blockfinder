@@ -2,7 +2,7 @@ use std::{
     env,
     fs::{self, create_dir_all, File},
     io::copy,
-    path::PathBuf,
+    path::{Path, PathBuf},
 };
 
 #[allow(unused)]
