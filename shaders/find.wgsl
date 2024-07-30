@@ -27,8 +27,6 @@ fn main(@builtin(global_invocation_id) invocation_id: vec3<u32>, @builtin(num_wo
             }
         }
     }
-    
-        
     if(result) {
         position[0] = invocation_id.x;
         position[1] = invocation_id.y;
@@ -54,8 +52,8 @@ fn get_grid(index: u32) -> u32 {
 }
 
 fn get_chunk(index: u32) -> u32 {
-    let real_index = index / 4;
-    return (chunk[real_index] >> ((index % 4) * 8)) & 255;
+    let real_index = index / 16;
+    return (chunk[real_index] >> ((index % 16) * 2)) & 3;
     //return chunk[index];
 }
 

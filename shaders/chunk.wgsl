@@ -8,15 +8,27 @@ var<storage, read_write> chunk: array<u32>;
 @compute @workgroup_size(1)
 fn main(@builtin(global_invocation_id) invocation_id: vec3<u32>, @builtin(num_workgroups) workgroups: vec3<u32>) {
     let index = to_index(workgroups, invocation_id);
-    chunk[index] = get_block_rotations(vec3i64(invocation_id) * vec3(4,1,1) + vec3(i64(position.x),0,i64(position.y)));
+    chunk[index] = get_block_rotations(vec3i64(invocation_id) * vec3(16,1,1) + vec3(i64(position.x),0,i64(position.y)));
 }
 
 fn get_block_rotations(pos: vec3<i64>) -> u32 {
-    return pack4xU8(vec4(
+    return pack16xU2(array<u32, 16>(
         get_block_rotation(pos),
         get_block_rotation(pos + vec3(1,0,0)),
         get_block_rotation(pos + vec3(2,0,0)),
         get_block_rotation(pos + vec3(3,0,0)),
+        get_block_rotation(pos + vec3(4,0,0)),
+        get_block_rotation(pos + vec3(5,0,0)),
+        get_block_rotation(pos + vec3(6,0,0)),
+        get_block_rotation(pos + vec3(7,0,0)),
+        get_block_rotation(pos + vec3(8,0,0)),
+        get_block_rotation(pos + vec3(9,0,0)),
+        get_block_rotation(pos + vec3(10,0,0)),
+        get_block_rotation(pos + vec3(11,0,0)),
+        get_block_rotation(pos + vec3(12,0,0)),
+        get_block_rotation(pos + vec3(13,0,0)),
+        get_block_rotation(pos + vec3(14,0,0)),
+        get_block_rotation(pos + vec3(15,0,0)),
     ));
 }
 
@@ -55,4 +67,7 @@ fn from_index(workgroups: vec3<u32>, index: u32) -> vec3<u32> {
 
 fn pack4xU8(data: vec4<u32>) -> u32 {
     return data.r | (data.g << 8) | (data.b << 16) | (data.a << 24);
+}
+fn pack16xU2(data: array<u32, 16>) -> u32 {
+    return data[0] | (data[1] << 2) | (data[2] << 4) | (data[3] << 6) | (data[4] << 8) | (data[5] << 10) | (data[6] << 12) | (data[7] << 14) | (data[8] << 16) | (data[9] << 18) | (data[10] << 20) | (data[11] << 22) | (data[12] << 24) | (data[13] << 26) | (data[14] << 28) | (data[15] << 30);
 }

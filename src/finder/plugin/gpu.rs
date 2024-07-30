@@ -180,7 +180,7 @@ impl FromWorld for FindShaderData {
             { GRID_SIZE.0 * GRID_SIZE.1 * GRID_SIZE.2 / 4 },
         >());
         let mut chunk =
-        StorageBuffer::from(create_box::<u32, { CHUNK_SIZE * CHUNK_SIZE * WORLD_HEIGHT / 4 }>());
+        StorageBuffer::from(create_box::<u32, { CHUNK_SIZE * CHUNK_SIZE * WORLD_HEIGHT / 16 }>());
         //  StorageBuffer::from(create_box::<u32, { CHUNK_SIZE * CHUNK_SIZE * WORLD_HEIGHT }>());
         chunk_size.write_buffer(render_device, render_queue);
         position.write_buffer(render_device, render_queue);
@@ -242,7 +242,7 @@ fn chunk_layout(render_device: &RenderDevice) -> BindGroupLayout {
                     false,
                     NonZeroU64::new(
                         //(CHUNK_SIZE * CHUNK_SIZE * WORLD_HEIGHT * size_of::<u32>()) as u64,
-                        (CHUNK_SIZE * CHUNK_SIZE * WORLD_HEIGHT * size_of::<u8>()) as u64,
+                        (CHUNK_SIZE * CHUNK_SIZE * WORLD_HEIGHT * size_of::<u8>() / 4) as u64,
                     ),
                 ),
             ),
@@ -260,7 +260,7 @@ fn find_layout(render_device: &RenderDevice) -> BindGroupLayout {
                 storage_buffer_sized(
                     false,
                     NonZeroU64::new(
-                        (CHUNK_SIZE * CHUNK_SIZE * WORLD_HEIGHT * size_of::<u8>()) as u64,
+                        (CHUNK_SIZE * CHUNK_SIZE * WORLD_HEIGHT * size_of::<u8>() / 4) as u64,
                         //(CHUNK_SIZE * CHUNK_SIZE * WORLD_HEIGHT * size_of::<u32>()) as u64,
                     ),
                 ),
@@ -314,7 +314,7 @@ impl render_graph::Node for FindNode {
                     .begin_compute_pass(&ComputePassDescriptor::default());
                 pass.set_bind_group(0, &pipeline.chunk_bind_group, &[]);
                 pass.set_pipeline(chunk_pipeline);
-                pass.dispatch_workgroups(CHUNK_SIZE as u32 / 4, WORLD_HEIGHT as u32, CHUNK_SIZE as u32);
+                pass.dispatch_workgroups(CHUNK_SIZE as u32 / 16, WORLD_HEIGHT as u32, CHUNK_SIZE as u32);
                 //pass.dispatch_workgroups(CHUNK_SIZE as u32, WORLD_HEIGHT as u32, CHUNK_SIZE as u32);
                 drop(pass);
                 let find_pipeline = pipeline_cache
