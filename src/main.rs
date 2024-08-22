@@ -27,6 +27,7 @@ pub mod constants;
 pub mod finder;
 pub mod game_assets;
 pub mod grid;
+#[cfg(not(debug_assertions))]
 pub mod shader_assets;
 
 #[derive(Clone, PartialEq, Eq, Hash, Debug, Default, States)]
