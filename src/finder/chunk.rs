@@ -1,8 +1,5 @@
 use std::{
-    fmt::Debug,
-    sync::{Arc, Condvar, Mutex},
-    thread::{self, JoinHandle},
-    time::Instant,
+    alloc::{alloc, alloc_zeroed, Layout}, fmt::Debug, sync::{Arc, Condvar, Mutex}, thread::{self, JoinHandle}, time::Instant
 };
 
 use crate::{constants::*, finder::util::spiral};
@@ -14,11 +11,11 @@ use bevy_meshem::prelude::three_d_cords;
 use super::util::get_block_rotation;
 
 pub fn create_box<T: Default + Debug, const N: usize>() -> Box<[T; N]> {
-    let mut array = Vec::with_capacity(N);
-    for _ in 0..N {
-        array.push(T::default());
-    }
-    array.into_boxed_slice().try_into().unwrap()
+    let layout = Layout::new::<[T; N]>();
+    let pointer: *mut [T; N] = unsafe {
+        alloc_zeroed(layout) as *mut [T; N]
+    };
+    unsafe { Box::from_raw(pointer) }
 }
 
 pub fn generate_grid(start_x: i64, start_z: i64) -> Box<Chunk> {
