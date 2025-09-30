@@ -47,7 +47,7 @@ impl BlockList {
             .map(|texture| {
                 (
                     texture.clone(),
-                    format!("minecraft\\textures\\{}.png", texture),
+                    format!("minecraft/textures/{}.png", texture),
                 )
             })
             .collect();
